@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { callRouter } from './endpoints/calls';
+import { callRouter } from './endpoints/voice/calls';
 import { webhookRouter } from './endpoints/webhooks';
 
 export const coreRouter = Router();

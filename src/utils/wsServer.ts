@@ -23,9 +23,9 @@ wss.on('connection', async (callWs: WebSocket) => {
 
         const connector = new StreamConnector(
             `${config.sarvamTTSWs}?model=${config.sarvamTTSModel}&send_completion_event=true`,
-            StreamType.BIDIRECTIONAL,
             callStreamHandler(pipeline),
             remoteStreamHandler(),
+            StreamType.BIDIRECTIONAL,
             { 'api-subscription-key': config.sarvamApiKey }
         );
 

@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { config } from '../../core/config';
-import { Client} from "@frejun/teler";
+import { config } from '../../../core/config';
+import { telerClient } from '../../../services/telerClient';
 
 export const callRouter = Router();
 
@@ -8,19 +8,18 @@ export const getFlowUrl             = () => `https://${process.env.SERVER_DOMAIN
 export const getStatusCallbackUrl   = () => `https://${process.env.SERVER_DOMAIN}/api/v1/webhooks/receiver`;
 export const getMediaStreamURL      = () => `wss://${process.env.SERVER_DOMAIN}/api/v1/media-stream`;
 
-callRouter.post('/initiate-call', async (req: Request, res: Response) => {
+callRouter.post('/initiate', async (req: Request, res: Response) => {
     try {
         const { fromNumber, toNumber, record } = req.body;
 
-        const client            = new Client(config.telerKey);
         const flowUrl           = getFlowUrl();
         const statusCallbackUrl = getStatusCallbackUrl();
 
-        const call = await client.calls.create({
-            from_number: fromNumber,
-            to_number: toNumber,
-            flow_url: flowUrl,
-            status_callback_url: statusCallbackUrl,
+        const call = await telerClient.voice.calls.create({
+            fromNumber,
+            toNumber,
+            flowUrl,
+            statusCallbackUrl,
             record: record ?? true
         });
 
@@ -42,3 +41,12 @@ callRouter.post('/flow', (_req: Request, res: Response) => {
         record:      false,
     });
 });
+
+
+callRouter.post("/dial", (req: Request, res: Response) => {
+    console.log("Request body: ", req.body);
+    res.json({
+        action: "dial",
+        to: "+918918961351"
+    })
+})
